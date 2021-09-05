@@ -28,7 +28,7 @@ USE WideWorldImporters
 select wh.StockItemID, wh.StockItemName 
 from
 Warehouse.StockItems wh (nolock) where
-lower(wh.StockItemName) like ('%urgent%') or  wh.StockItemName like ('Animal%')
+wh.StockItemName like ('%urgent%') or  wh.StockItemName like ('Animal%')
 
 /*
 2. Поставщиков (Suppliers), у которых не было сделано ни одного заказа (PurchaseOrders).
@@ -127,9 +127,10 @@ order by so.OrderDate desc , so.OrderID desc, cust.CustomerName, SalesPersonName
 select distinct cust.CustomerID , cust.CustomerName, cust.PhoneNumber 
 from Sales.Orders (nolock) so
 join Sales.OrderLines (nolock) sol on so.OrderID = sol.OrderID
+join Warehouse.StockItems si (nolock) on si.StockItemID = sol.StockItemID
 join Sales.Customers (nolock) cust on so.CustomerID = cust.CustomerID
 where
-sol.Description = 'Chocolate frogs 250g'
+si.StockItemName = 'Chocolate frogs 250g'
 order by cust.CustomerName
 
 /*
