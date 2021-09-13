@@ -1,13 +1,13 @@
-/*
+п»ї/*
 
-Для всех заданий, где возможно, сделайте два варианта запросов:
+Р”Р»СЏ РІСЃРµС… Р·Р°РґР°РЅРёР№, РіРґРµ РІРѕР·РјРѕР¶РЅРѕ, СЃРґРµР»Р°Р№С‚Рµ РґРІР° РІР°СЂРёР°РЅС‚Р° Р·Р°РїСЂРѕСЃРѕРІ:
 
-    через вложенный запрос
-    через WITH (для производных таблиц)
+    С‡РµСЂРµР· РІР»РѕР¶РµРЅРЅС‹Р№ Р·Р°РїСЂРѕСЃ
+    С‡РµСЂРµР· WITH (РґР»СЏ РїСЂРѕРёР·РІРѕРґРЅС‹С… С‚Р°Р±Р»РёС†)
 
-Выберите сотрудников (Application.People), которые являются продажниками (IsSalesPerson), 
-и не сделали ни одной продажи 04 июля 2015 года. 
-Вывести ИД сотрудника и его полное имя. Продажи смотреть в таблице Sales.Invoices.
+Р’С‹Р±РµСЂРёС‚Рµ СЃРѕС‚СЂСѓРґРЅРёРєРѕРІ (Application.People), РєРѕС‚РѕСЂС‹Рµ СЏРІР»СЏСЋС‚СЃСЏ РїСЂРѕРґР°Р¶РЅРёРєР°РјРё (IsSalesPerson), 
+Рё РЅРµ СЃРґРµР»Р°Р»Рё РЅРё РѕРґРЅРѕР№ РїСЂРѕРґР°Р¶Рё 04 РёСЋР»СЏ 2015 РіРѕРґР°. 
+Р’С‹РІРµСЃС‚Рё РР” СЃРѕС‚СЂСѓРґРЅРёРєР° Рё РµРіРѕ РїРѕР»РЅРѕРµ РёРјСЏ. РџСЂРѕРґР°Р¶Рё СЃРјРѕС‚СЂРµС‚СЊ РІ С‚Р°Р±Р»РёС†Рµ Sales.Invoices.
 */
 use WideWorldImporters
 go
@@ -24,9 +24,9 @@ where ap.IsSalesperson = 1
 and not ap.PersonID in (select SalespersonPersonID from InvoiceCTE)
 go
 
-/*Выберите товары с минимальной ценой (подзапросом). 
-Сделайте два варианта подзапроса. 
-Вывести: ИД товара, наименование товара, цена.*/
+/*Р’С‹Р±РµСЂРёС‚Рµ С‚РѕРІР°СЂС‹ СЃ РјРёРЅРёРјР°Р»СЊРЅРѕР№ С†РµРЅРѕР№ (РїРѕРґР·Р°РїСЂРѕСЃРѕРј). 
+РЎРґРµР»Р°Р№С‚Рµ РґРІР° РІР°СЂРёР°РЅС‚Р° РїРѕРґР·Р°РїСЂРѕСЃР°. 
+Р’С‹РІРµСЃС‚Рё: РР” С‚РѕРІР°СЂР°, РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РѕРІР°СЂР°, С†РµРЅР°.*/
 select si.StockItemID, si.StockItemName, si.UnitPrice 
 from 
 Warehouse.StockItems as si
@@ -40,9 +40,9 @@ Warehouse.StockItems as si
 join MinPriceCTE as mpc on si.UnitPrice = mpc.MinPrice
 go
 
-/*Выберите информацию по клиентам, которые перевели компании пять максимальных платежей 
-из Sales.CustomerTransactions. 
-Представьте несколько способов (в том числе с CTE).*/
+/*Р’С‹Р±РµСЂРёС‚Рµ РёРЅС„РѕСЂРјР°С†РёСЋ РїРѕ РєР»РёРµРЅС‚Р°Рј, РєРѕС‚РѕСЂС‹Рµ РїРµСЂРµРІРµР»Рё РєРѕРјРїР°РЅРёРё РїСЏС‚СЊ РјР°РєСЃРёРјР°Р»СЊРЅС‹С… РїР»Р°С‚РµР¶РµР№ 
+РёР· Sales.CustomerTransactions. 
+РџСЂРµРґСЃС‚Р°РІСЊС‚Рµ РЅРµСЃРєРѕР»СЊРєРѕ СЃРїРѕСЃРѕР±РѕРІ (РІ С‚РѕРј С‡РёСЃР»Рµ СЃ CTE).*/
 
 select cs.CustomerID, cs.CustomerName
 from 
@@ -59,13 +59,13 @@ from
 Sales.Customers cs
 join MaxTransactionCTE mt on cs.CustomerID = mt.CustomerID
 go
-/*Выберите города (ид и название), в которые были доставлены товары, 
-входящие в тройку самых дорогих товаров, 
-а также имя сотрудника, который осуществлял упаковку заказов (PackedByPersonID).
+/*Р’С‹Р±РµСЂРёС‚Рµ РіРѕСЂРѕРґР° (РёРґ Рё РЅР°Р·РІР°РЅРёРµ), РІ РєРѕС‚РѕСЂС‹Рµ Р±С‹Р»Рё РґРѕСЃС‚Р°РІР»РµРЅС‹ С‚РѕРІР°СЂС‹, 
+РІС…РѕРґСЏС‰РёРµ РІ С‚СЂРѕР№РєСѓ СЃР°РјС‹С… РґРѕСЂРѕРіРёС… С‚РѕРІР°СЂРѕРІ, 
+Р° С‚Р°РєР¶Рµ РёРјСЏ СЃРѕС‚СЂСѓРґРЅРёРєР°, РєРѕС‚РѕСЂС‹Р№ РѕСЃСѓС‰РµСЃС‚РІР»СЏР» СѓРїР°РєРѕРІРєСѓ Р·Р°РєР°Р·РѕРІ (PackedByPersonID).
 ---------------------------------------------------------------------------------
 
-У меня вопрос - не подскажите какие таблички я должен смотреть - по продажам 
-или же по поставке товара? Просто не совсем понял как связаны Purchasing.PurchaseOrderLines
+РЈ РјРµРЅСЏ РІРѕРїСЂРѕСЃ - РЅРµ РїРѕРґСЃРєР°Р¶РёС‚Рµ РєР°РєРёРµ С‚Р°Р±Р»РёС‡РєРё СЏ РґРѕР»Р¶РµРЅ СЃРјРѕС‚СЂРµС‚СЊ - РїРѕ РїСЂРѕРґР°Р¶Р°Рј 
+РёР»Рё Р¶Рµ РїРѕ РїРѕСЃС‚Р°РІРєРµ С‚РѕРІР°СЂР°? РџСЂРѕСЃС‚Рѕ РЅРµ СЃРѕРІСЃРµРј РїРѕРЅСЏР» РєР°Рє СЃРІСЏР·Р°РЅС‹ Purchasing.PurchaseOrderLines
 c Sales.Invoices
 */
 
@@ -75,3 +75,19 @@ from Application.Cities ap
 --select distinct top 3   StockItemID from Purchasing.PurchaseOrderLines order by ExpectedUnitPricePerOuter desc;
 
 --select * from Sales.Invoices
+
+go
+with  MaxExpensiveCTE as (select top 3  UnitPrice from Sales.OrderLines
+group by UnitPrice
+order by UnitPrice desc ),
+ OrdersLineCTE as (select sor.OrderID from Sales.OrderLines sor where sor.UnitPrice = MaxExpensiveCTE.UnitPrice)
+ ,OrdersCTE as (select ord.CustomerID from Sales.Orders as ord where ord.OrderID = OrdersLineCTE.OrderID )
+ , CustomersCTE as (select cust.DeliveryCityID from Sales.Customers cust where cust.CustomerID = OrdersCTE.CustomerID)
+ select ap.CityID, ap.CityName from 
+ Application.Cities ap
+ join CustomersCTE cs on ap.CityID  = cs.DeliveryCityID 
+
+--select * from MaxExpensive
+
+/*select * from sysobjects where id in (
+select id from syscolumns where name like '%CityID%')*/
