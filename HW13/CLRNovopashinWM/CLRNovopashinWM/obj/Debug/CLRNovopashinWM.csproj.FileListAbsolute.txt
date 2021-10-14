@@ -1,0 +1,6 @@
+D:\projects\OTUS\SQL\otus-mssql-2021-08-novopashinwmwm\HW13\CLRNovopashinWM\CLRNovopashinWM\bin\Debug\CLRNovopashinWM.dll
+D:\projects\OTUS\SQL\otus-mssql-2021-08-novopashinwmwm\HW13\CLRNovopashinWM\CLRNovopashinWM\bin\Debug\CLRNovopashinWM.pdb
+D:\projects\OTUS\SQL\otus-mssql-2021-08-novopashinwmwm\HW13\CLRNovopashinWM\CLRNovopashinWM\obj\Debug\CLRNovopashinWM.csproj.AssemblyReference.cache
+D:\projects\OTUS\SQL\otus-mssql-2021-08-novopashinwmwm\HW13\CLRNovopashinWM\CLRNovopashinWM\obj\Debug\CLRNovopashinWM.csproj.CoreCompileInputs.cache
+D:\projects\OTUS\SQL\otus-mssql-2021-08-novopashinwmwm\HW13\CLRNovopashinWM\CLRNovopashinWM\obj\Debug\CLRNovopashinWM.dll
+D:\projects\OTUS\SQL\otus-mssql-2021-08-novopashinwmwm\HW13\CLRNovopashinWM\CLRNovopashinWM\obj\Debug\CLRNovopashinWM.pdb
