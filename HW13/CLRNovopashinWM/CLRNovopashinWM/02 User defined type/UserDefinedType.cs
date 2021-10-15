@@ -12,7 +12,7 @@ namespace CLRNovopashinWM
     Format.UserDefined,
     IsByteOrdered = true,
     IsFixedLength = false,
-    MaxByteSize = 10)]
+    MaxByteSize = 11)]
     public class RuPassport : INullable, IBinarySerialize
     {
         // Поле для хранения значения
