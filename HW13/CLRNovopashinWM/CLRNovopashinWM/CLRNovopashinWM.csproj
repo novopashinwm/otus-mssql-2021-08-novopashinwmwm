@@ -43,12 +43,13 @@
   <ItemGroup>
     <Compile Include="01 Function\DemoFunctionCLR.cs" />
     <Compile Include="02 User defined type\UserDefinedType.cs" />
-    <Compile Include="03 Aggregate\DemoAggegate.cs" />
+    <Compile Include="03 Aggregate\MySTRING_AGG.cs" />
     <Compile Include="03 Aggregate\IAggregate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="01 Function\DemoFunction.sql" />
+    <Content Include="02 User defined type\UserDefinedType.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
