@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlTypes;
 using System.Text.RegularExpressions;
+using System;
 
 namespace CLRNovopashinWM
 {
@@ -28,14 +29,15 @@ namespace CLRNovopashinWM
         }
 
         //Функция расширяющая возможности like, путем использования regex
-        public static SqlBoolean MyLike(SqlString sqlPattern, SqlString input) 
+        public static SqlBoolean MyLike(SqlString sqlInput, SqlString sqlPattern) 
         {
-            if (Regex.IsMatch(input.Value, sqlPattern.Value)) {
+            var input = sqlInput.Value;
+            var pattern = sqlPattern.Value;
+
+            if (Regex.IsMatch(input, pattern)) {
                 return SqlBoolean.True;
             }
             return SqlBoolean.False;
         }
-
-
     }
 }

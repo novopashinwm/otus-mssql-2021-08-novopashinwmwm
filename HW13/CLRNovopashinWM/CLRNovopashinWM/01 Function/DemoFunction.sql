@@ -40,7 +40,7 @@ CREATE FUNCTION dbo.fn_Luhn(@Name nvarchar(20))
 RETURNS bit
 AS EXTERNAL NAME [DemoNovopashinWM].[CLRNovopashinWM.DemoFunctionCLR].Luhn;
 GO 
-CREATE FUNCTION dbo.fn_MyLike(@pattern nvarchar(255), @input nvarchar)  
+CREATE FUNCTION dbo.fn_MyLike(@input nvarchar(255), @pattern nvarchar(255))  
 RETURNS bit
 AS EXTERNAL NAME [DemoNovopashinWM].[CLRNovopashinWM.DemoFunctionCLR].MyLike ;
 GO 
@@ -49,9 +49,11 @@ select dbo.fn_Luhn ('5559493694071227') as Right_Card
 --Не правильная карта
 select dbo.fn_Luhn ('5559493694071220') as WRONG_CARD
 go
---Я привел простой пример - на самом деле все надо отлаживать
---Например я хотел проверить российской паспорт - паттерн выглядит так - \d{4} \d{6} 
---и у меня не получилось это сделать - может какие-то опции самому regexp нужно выставить 
-select dbo.fn_MyLike('\d+','0700')
-select dbo.fn_MyLike('\d+',' 0700')
+-- Нашел в чем была ошибка - в функции fn_MyLike я в параметре @input указывал nvarchar - а это один символ
+-- а надо было поставить количество символов
+select dbo.fn_MyLike('0700','^\d+$')
+select dbo.fn_MyLike(' 0700', '^\d+$')
+--Проверка, что это российский паспорт
+select dbo.fn_MyLike('0700 123456','^\d{4} \d{6}$')
+select dbo.fn_MyLike('07 00 123456','^\d{4} \d{6}$')
 go

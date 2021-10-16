@@ -11,7 +11,7 @@ namespace CLRNovopashinWM
     {
         void Init();
         void Accumulate(SqlString value, SqlString Delimiter);
-        void Merge(DemoAggegate group);
+        void Merge(MySTRING_AGG group);
         SqlString Terminate();
     }
 }

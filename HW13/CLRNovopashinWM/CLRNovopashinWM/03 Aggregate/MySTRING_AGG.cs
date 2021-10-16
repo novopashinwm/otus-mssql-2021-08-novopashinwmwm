@@ -7,7 +7,14 @@ using System.Text;
 
 namespace CLRNovopashinWM
 {
-    public struct DemoAggegate : IAggregate, IBinarySerialize
+    [Serializable]
+    [SqlUserDefinedAggregate(
+       Format.UserDefined, /// Binary Serialization because of StringBuilder
+       IsInvariantToOrder = false, /// order changes the result
+       IsInvariantToNulls = true,  /// nulls don't change the result
+       IsInvariantToDuplicates = false, /// duplicates change the result
+       MaxByteSize = -1 )]
+    public struct MySTRING_AGG : IBinarySerialize
     {
         private StringBuilder _accumulator;
         private string _delimiter;
@@ -38,10 +45,9 @@ namespace CLRNovopashinWM
             this.IsNull = true;
         }
 
-        public void Merge(DemoAggegate group)
+        public void Merge(MySTRING_AGG group)
         {
             /// add the delimiter between strings
-
             if (_accumulator.Length > 0 && group._accumulator.Length > 0) 
                 _accumulator.Append(_delimiter);
             _accumulator.Append(group._accumulator.ToString());
