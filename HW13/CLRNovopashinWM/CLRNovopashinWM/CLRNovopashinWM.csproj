@@ -50,6 +50,7 @@
   <ItemGroup>
     <Content Include="01 Function\DemoFunction.sql" />
     <Content Include="02 User defined type\UserDefinedType.sql" />
+    <Content Include="03 Aggregate\MySTRING_AGG.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
