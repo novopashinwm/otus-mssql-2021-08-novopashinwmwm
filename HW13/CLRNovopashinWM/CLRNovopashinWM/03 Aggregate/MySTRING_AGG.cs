@@ -14,7 +14,7 @@ namespace CLRNovopashinWM
        IsInvariantToNulls = true,  /// nulls don't change the result
        IsInvariantToDuplicates = false, /// duplicates change the result
        MaxByteSize = -1 )]
-    public struct MySTRING_AGG : IBinarySerialize
+    public struct MySTRING_AGG : IAggregate, IBinarySerialize
     {
         private StringBuilder _accumulator;
         private string _delimiter;
