@@ -24,7 +24,7 @@ BarCode_GUID | varchar(50)| Уникальный идентификатор кн
 
 Наименование столбца | Тип данных | Описание поля
 ------------ | -------------| -----------
-GenreD| bigint | Primary key
+GenreID| bigint | Primary key
 Name | varchar(50)| Название жанра
 
 
