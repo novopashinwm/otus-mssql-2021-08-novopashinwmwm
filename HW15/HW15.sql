@@ -1,164 +1,157 @@
-﻿-- ************************************** [Authors]
+﻿IF DB_ID (N'TOWN_LIBRARY') IS NOT NULL 
+	DROP DATABASE TOWN_LIBRARY; 
+GO 
+CREATE  DATABASE TOWN_LIBRARY;
+GO
+USE TOWN_LIBRARY;
+GO
+
+-- ************************************** [Genres]
+drop table if exists [Genres]
+go
+
+CREATE TABLE [Genres]
+(
+ [GenreID] bigint IDENTITY (1, 1) NOT NULL ,
+ [Name]    varchar(50) NOT NULL ,
+
+ CONSTRAINT [PK_Genres] PRIMARY KEY CLUSTERED ([GenreID] ASC)
+);
+GO
+-- ************************************** [Authors]
+drop table if exists [Authors]
+go
 CREATE TABLE [Authors]
 (
  [AuthorID]    bigint IDENTITY (1, 1) NOT NULL ,
  [Born]        datetime2 NOT NULL ,
  [Dead]        datetime2 NULL ,
- [Description] nvarchar(255) SPARSE NULL ,
+ [Description] nvarchar(max) SPARSE NULL ,
  [WikiURL]     varchar(200) NOT NULL ,
 
 
- CONSTRAINT [PK_8] PRIMARY KEY CLUSTERED ([AuthorID] ASC)
+ CONSTRAINT [PK_Authors] PRIMARY KEY CLUSTERED ([AuthorID] ASC)
 );
 GO
 
 -- ************************************** [Books]
+drop table if exists [Books]
+go
+
 CREATE TABLE [Books]
 (
+ [BookID]       bigint identity(1,1) NOT NULL ,
  [GenreID]      bigint NOT NULL ,
  [AuthorID]     bigint NOT NULL ,
- [Name]         varchar(50) NOT NULL ,
- [Description]  varchar(255) NOT NULL ,
+ [Name]         varchar(255) NOT NULL ,
+ [Description]  varchar(max) NOT NULL ,
  [Year]         int NOT NULL ,
+ [ISBN]         varchar(20) NOT NULL ,
  [Izdatelstvo]  varchar(50) NOT NULL ,
  [BarCode_GUID] varchar(50) NOT NULL ,
- [BookID]        NOT NULL ,
 
-
- CONSTRAINT [PK_5] PRIMARY KEY CLUSTERED ([BookID] ASC),
+ CONSTRAINT [PK_Books] PRIMARY KEY CLUSTERED ([BookID] ASC),
  CONSTRAINT [FK_Book_Author] FOREIGN KEY ([AuthorID])  REFERENCES [Authors]([AuthorID]),
  CONSTRAINT [FK_Book_Genre_Genre] FOREIGN KEY ([GenreID])  REFERENCES [Genres]([GenreID])
 );
 GO
 
 
-CREATE NONCLUSTERED INDEX [fkIdx_21] ON [Books] 
- (
-  [GenreID] ASC
- )
-
+CREATE NONCLUSTERED INDEX [IX_Books_Genres] ON [Books] ( [GenreID] ASC)
 GO
 
-CREATE NONCLUSTERED INDEX [fkIdx_25] ON [Books] 
- (
-  [AuthorID] ASC
- )
-
+CREATE NONCLUSTERED INDEX [IX_Books_Authors] ON [Books] ([AuthorID] ASC)
 GO
 
 -- ************************************** [Cupboards]
+drop table if exists [Cupboards]
+go
 CREATE TABLE [Cupboards]
 (
- [Locate]     varchar(200) NOT NULL ,
  [CupboardID] bigint IDENTITY (1, 1) NOT NULL ,
+ [Locate]     varchar(200) NOT NULL ,
 
-
- CONSTRAINT [PK_63] PRIMARY KEY CLUSTERED ([CupboardID] ASC)
+ CONSTRAINT [PK_Cupboards] PRIMARY KEY CLUSTERED ([CupboardID] ASC)
 );
 GO
 -- ************************************** [Users]
+drop table if exists [Users]
+go
 CREATE TABLE [Users]
 (
- [Name]         varchar(200) NOT NULL ,
- [UpdateUserID] bigint NOT NULL ,
  [UserID]       bigint IDENTITY (1, 1) NOT NULL ,
+ [Name]         varchar(200) NOT NULL ,
 
+ CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([UserID] ASC),
 
- CONSTRAINT [PK_100] PRIMARY KEY CLUSTERED ([UserID] ASC),
- CONSTRAINT [FK_56] FOREIGN KEY ([UpdateUserID])  REFERENCES [Docs]([DocID])
 );
 GO
 
-
-CREATE NONCLUSTERED INDEX [fkIdx_58] ON [Users] 
- (
-  [UpdateUserID] ASC
- )
-go
--- ************************************** [Genres]
-CREATE TABLE [Genres]
-(
- [GenreID] bigint IDENTITY (1, 1) NOT NULL ,
- [Name]    varchar(50) NOT NULL ,
-
-
- CONSTRAINT [PK_16] PRIMARY KEY CLUSTERED ([GenreID] ASC)
-);
-GO
 -- ************************************** [Readers]
+drop table if exists [Readers]
+go
 CREATE TABLE [Readers]
 (
+ [ReaderID]            bigint IDENTITY (1, 1) NOT NULL ,
  [FIO]                 varchar(200) NOT NULL ,
  [Address]             varchar(200) NOT NULL ,
  [Phone]               varchar(20) NOT NULL ,
  [ReaderTicketBarcode] varchar(50) NOT NULL ,
- [ReaderID]            bigint IDENTITY (1, 1) NOT NULL ,
 
 
- CONSTRAINT [PK_33] PRIMARY KEY CLUSTERED ([ReaderID] ASC)
+ CONSTRAINT [PK_Readers] PRIMARY KEY CLUSTERED ([ReaderID] ASC)
 );
 GO
 -- ************************************** [Docs]
+drop table if exists [Docs]
+go
+
 CREATE TABLE [Docs]
 (
+ [DocID]        bigint IDENTITY (1, 1) NOT NULL ,
  [CreateUserID] bigint NOT NULL ,
  [CreateDate]   datetime2 NOT NULL ,
  [UpdateUserID] bigint NOT NULL ,
  [UpdateDate]   datetime2 NOT NULL ,
- [DocInID]      bigint NOT NULL ,
- [DocID]        bigint IDENTITY (1, 1) NOT NULL ,
+ 
+ CONSTRAINT [PK_Docs] PRIMARY KEY CLUSTERED ([DocID] ASC),
+ CONSTRAINT [FK_Docs_UsersCreate] FOREIGN KEY ([CreateUserID])  REFERENCES [Users]([UserID]),
+ CONSTRAINT [FK_Docs_UsersUpdate] FOREIGN KEY ([UpdateUserID])  REFERENCES [Users]([UserID]),
 
-
- CONSTRAINT [PK_81] PRIMARY KEY CLUSTERED ([DocID] ASC),
- CONSTRAINT [FK_53] FOREIGN KEY ([CreateUserID])  REFERENCES [Users]([UserID]),
- CONSTRAINT [FK_97] FOREIGN KEY ([DocInID])  REFERENCES [DocsIn]([DocInID])
 );
 GO
 
-
-CREATE NONCLUSTERED INDEX [fkIdx_55] ON [Docs] 
- (
-  [CreateUserID] ASC
- )
-
-GO
-
-CREATE NONCLUSTERED INDEX [fkIdx_99] ON [Docs] 
- (
-  [DocInID] ASC
- )
-
-GO
 -- ************************************** [DocsIn]
+drop table if exists [DocsIn]
+go
+
 CREATE TABLE [DocsIn]
 (
+ [DocInID]    bigint IDENTITY (1, 1) NOT NULL ,
  [DocID]      bigint NOT NULL ,
  [CupboardID] bigint NOT NULL ,
- [BookID]      NOT NULL ,
- [DocInID]    bigint IDENTITY (1, 1) NOT NULL ,
+ [BookID]     bigint NOT NULL ,
 
-
- CONSTRAINT [PK_67] PRIMARY KEY CLUSTERED ([DocInID] ASC),
- CONSTRAINT [FK_91] FOREIGN KEY ([CupboardID])  REFERENCES [Cupboards]([CupboardID]),
- CONSTRAINT [FK_94] FOREIGN KEY ([BookID])  REFERENCES [Books]([BookID])
+ CONSTRAINT [PK_DocsIn] PRIMARY KEY CLUSTERED ([DocInID] ASC),
+ CONSTRAINT [FK_DocsIn_Cupboards] FOREIGN KEY ([CupboardID])  REFERENCES [Cupboards]([CupboardID]),
+ CONSTRAINT [FK_DocsIn_Books] FOREIGN KEY ([BookID])  REFERENCES [Books]([BookID]),
+ CONSTRAINT [FK_DocsIn_Docs] FOREIGN KEY ([DocID])  REFERENCES [Docs]([DocID]),
 );
 GO
 
-
-CREATE NONCLUSTERED INDEX [fkIdx_93] ON [DocsIn] 
- (
-  [CupboardID] ASC
- )
-
+CREATE NONCLUSTERED INDEX [IX_DOCSIn_Cupboard] ON [DocsIn] ([CupboardID] ASC)
 GO
 
-CREATE NONCLUSTERED INDEX [fkIdx_96] ON [DocsIn] 
- (
-  [BookID] ASC
- )
-
+CREATE NONCLUSTERED INDEX [IX_DOCSIn_Book] ON [DocsIn] ([BookID] ASC)
 GO
+
+CREATE NONCLUSTERED INDEX [IX_DOCSIn_Docs] ON [DocsIn] ([DocID] ASC)
+GO
+
 -- ************************************** [DocsInOut]
+drop table if exists DocsInOut
+go
+
 CREATE TABLE [DocsInOut]
 (
  [DocInOutID]    bigint IDENTITY (1, 1) NOT NULL ,
@@ -168,10 +161,26 @@ CREATE TABLE [DocsInOut]
  [CupboardOutId] bigint NOT NULL ,
 
 
- CONSTRAINT [PK_110] PRIMARY KEY CLUSTERED ([DocInOutID] ASC)
+ CONSTRAINT [PK_DocsInOut] PRIMARY KEY CLUSTERED ([DocInOutID] ASC),
+ CONSTRAINT [FK_DocsInOut_CupboardIn] FOREIGN KEY ([CupboardInID])  REFERENCES [Cupboards]([CupboardID]),
+ CONSTRAINT [FK_DocsInOut_CupboardOut] FOREIGN KEY ([CupboardOutID])  REFERENCES [Cupboards]([CupboardID]),
+ CONSTRAINT [FK_DocsInOut_Books] FOREIGN KEY ([BookID])  REFERENCES [Books]([BookID]),
+ CONSTRAINT [FK_DocsInOut_Docs] FOREIGN KEY ([DocID])  REFERENCES [Docs]([DocID]),
 );
 GO
+CREATE NONCLUSTERED INDEX [IX_DOCSInOut_CupboardIn] ON [DocsInOut] ([CupboardInID] ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_DOCSInOut_CupboardOut] ON [DocsInOut] ([CupboardOutID] ASC)
+GO
+
+
+CREATE NONCLUSTERED INDEX [IX_DOCSInOut_Book] ON [DocsInOut] ([BookID] ASC)
+GO
+
 -- ************************************** [DocsOut]
+drop table if exists DocsOut
+go
 CREATE TABLE [DocsOut]
 (
  [DocOutID]   bigint IDENTITY (1, 1) NOT NULL ,
@@ -181,6 +190,13 @@ CREATE TABLE [DocsOut]
  [DateReturn] datetime2 NOT NULL ,
 
 
- CONSTRAINT [PK_103] PRIMARY KEY CLUSTERED ([DocOutID] ASC)
+ CONSTRAINT [PK_DocsOut] PRIMARY KEY CLUSTERED ([DocOutID] ASC),
+ CONSTRAINT [FK_DocsOut_Books] FOREIGN KEY ([BookID])  REFERENCES [Books]([BookID]),
+ CONSTRAINT [FK_DocsOut_Docs] FOREIGN KEY ([DocID])  REFERENCES [Docs]([DocID]),
 );
+GO
+CREATE NONCLUSTERED INDEX [IX_DOCSOut_Book] ON [DocsOut] ([BookID] ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [IX_DOCSOut_Docs] ON [DocsOut] ([DocID] ASC)
 GO
