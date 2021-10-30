@@ -1,4 +1,5 @@
-﻿IF DB_ID (N'TOWN_LIBRARY') IS NOT NULL 
+﻿-- Создание БД
+IF DB_ID (N'TOWN_LIBRARY') IS NOT NULL 
 	DROP DATABASE TOWN_LIBRARY; 
 GO 
 CREATE  DATABASE TOWN_LIBRARY;
@@ -6,6 +7,7 @@ GO
 USE TOWN_LIBRARY;
 GO
 
+-- ========================= СОЗДАНИЕ СПРАВОЧНИКОВ  =====================================
 -- ************************************** [Genres]
 drop table if exists [Genres]
 go
@@ -94,6 +96,7 @@ CREATE TABLE [Readers]
 (
  [ReaderID]            bigint IDENTITY (1, 1) NOT NULL ,
  [FIO]                 varchar(200) NOT NULL ,
+ [BORN]                datetime2 not null,
  [Address]             varchar(200) NOT NULL ,
  [Phone]               varchar(20) NOT NULL ,
  [ReaderTicketBarcode] varchar(50) NOT NULL ,
@@ -102,6 +105,12 @@ CREATE TABLE [Readers]
  CONSTRAINT [PK_Readers] PRIMARY KEY CLUSTERED ([ReaderID] ASC)
 );
 GO
+-- Читателем библиотеки может быть человек старше 18 лет.
+ALTER TABLE [Readers] 
+	ADD CONSTRAINT Readers_BORN 
+		CHECK (datediff(yy, BORN, getdate()) >=18);
+go
+----- ======================= Учет движения книг  ========================---
 -- ************************************** [Docs]
 drop table if exists [Docs]
 go
