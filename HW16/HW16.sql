@@ -27,17 +27,20 @@ CREATE TABLE [Authors]
 (
  [AuthorID]    bigint IDENTITY (1, 1) NOT NULL ,
  [FIO]         varchar(255),
- [Born]        datetime2 NOT NULL ,
- [Dead]        datetime2 NULL ,
+ [DateBorn]        datetime2 NOT NULL ,
+ [DateEnd]        datetime2 NULL ,
  [Description] nvarchar(max) SPARSE NULL ,
  [WikiURL]     varchar(200) NOT NULL ,
 
 
  CONSTRAINT [PK_Authors] PRIMARY KEY CLUSTERED ([AuthorID] ASC)
 );
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_Authors_Genres] ON [Authors] ( FIO ASC)
 GO
+
 -- ************************************** [Books]
 drop table if exists [Books]
 go
@@ -46,7 +49,6 @@ CREATE TABLE [Books]
 (
  [BookID]       bigint identity(1,1) NOT NULL ,
  [GenreID]      bigint NOT NULL ,
- [AuthorID]     bigint NOT NULL ,
  [Name]         varchar(255) NOT NULL ,
  [Description]  varchar(max) NOT NULL ,
  [Year]         int NOT NULL ,
@@ -55,7 +57,6 @@ CREATE TABLE [Books]
  [BarCode_GUID] varchar(50) NOT NULL ,
 
  CONSTRAINT [PK_Books] PRIMARY KEY CLUSTERED ([BookID] ASC),
- CONSTRAINT [FK_Book_Author] FOREIGN KEY ([AuthorID])  REFERENCES [Authors]([AuthorID]),
  CONSTRAINT [FK_Book_Genre_Genre] FOREIGN KEY ([GenreID])  REFERENCES [Genres]([GenreID])
 );
 GO
@@ -66,8 +67,32 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Books_Genres] ON [Books] ( [GenreID] ASC)
 GO
 
-CREATE NONCLUSTERED INDEX [IX_Books_Authors] ON [Books] ([AuthorID] ASC)
-GO
+--Двух книг с одним ISBN быть не может - этот индекс уникальный
+create UNIQUE nonclustered index [IX_Books_ISBN] on [Books] ([ISBN] ASC)
+go
+
+create table [BooksAuthors]
+(
+  [BookAuthorID] bigint identity (1,1) not null,
+  [BookID] bigint,
+  [AuthorID] bigint,
+  CONSTRAINT [PK_BookAuthorID] PRIMARY KEY CLUSTERED ([BookAuthorID] ASC),
+)
+go
+
+create table [BooksSaldo] 
+(
+  [BookSaldoID] bigint identity (1,1) not null,
+  [DateSaldo] datetime2 not null,
+  [BookID]    bigint not null,
+  [QtyIn]     int not null,
+  [QtyOut]    int not null,
+  [Saldo]     int not null
+  CONSTRAINT [PK_BookSaldo] PRIMARY KEY CLUSTERED ([BookSaldoID] ASC),
+  CONSTRAINT [FK_BookSaldo_BookID] FOREIGN KEY ([BookID])  REFERENCES [Books]([BookID])
+
+)
+go
 
 -- ************************************** [Cupboards]
 drop table if exists [Cupboards]
@@ -100,7 +125,7 @@ CREATE TABLE [Readers]
 (
  [ReaderID]            bigint IDENTITY (1, 1) NOT NULL ,
  [FIO]                 varchar(200) NOT NULL ,
- [BORN]                datetime2 not null,
+ [DateBorn]            datetime2 not null,
  [Address]             varchar(200) NOT NULL ,
  [Phone]               varchar(20) NOT NULL ,
  [ReaderTicketBarcode] varchar(50) NOT NULL ,
@@ -118,8 +143,8 @@ GO
 
 -- Читателем библиотеки может быть человек старше 18 лет.
 ALTER TABLE [Readers] 
-	ADD CONSTRAINT Readers_BORN 
-		CHECK (datediff(yy, BORN, getdate()) >=18);
+	ADD CONSTRAINT Readers_DateBorn 
+		CHECK (datediff(yy, DateBorn, getdate()) >=18);
 go
 ----- ======================= Учет движения книг  ========================---
 -- ************************************** [Docs]
@@ -151,6 +176,7 @@ CREATE TABLE [DocsIn]
  [DocID]      bigint NOT NULL ,
  [CupboardID] bigint NOT NULL ,
  [BookID]     bigint NOT NULL ,
+ [Qty]        int not null,
 
  CONSTRAINT [PK_DocsIn] PRIMARY KEY CLUSTERED ([DocInID] ASC),
  CONSTRAINT [FK_DocsIn_Cupboards] FOREIGN KEY ([CupboardID])  REFERENCES [Cupboards]([CupboardID]),
@@ -177,6 +203,7 @@ CREATE TABLE [DocsInOut]
  [DocInOutID]    bigint IDENTITY (1, 1) NOT NULL ,
  [DocID]         bigint NOT NULL ,
  [BookID]        bigint NOT NULL ,
+ [Qty]           int not null,
  [CupboardInID]  bigint NOT NULL ,
  [CupboardOutId] bigint NOT NULL ,
 
@@ -206,6 +233,7 @@ CREATE TABLE [DocsOut]
  [DocOutID]   bigint IDENTITY (1, 1) NOT NULL ,
  [DocID]      bigint NOT NULL ,
  [BookID]     bigint NOT NULL ,
+ [Qty]        int not null,
  [ReaderID]   bigint NOT NULL ,
  [DateReturn] datetime2 NOT NULL ,
 
@@ -220,3 +248,4 @@ GO
 
 CREATE NONCLUSTERED INDEX [IX_DOCSOut_Docs] ON [DocsOut] ([DocID] ASC)
 GO
+--==== Необходимо создать тестовые данные ======== ---
