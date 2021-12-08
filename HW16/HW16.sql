@@ -249,3 +249,36 @@ GO
 CREATE NONCLUSTERED INDEX [IX_DOCSOut_Docs] ON [DocsOut] ([DocID] ASC)
 GO
 --==== Необходимо создать тестовые данные ======== ---
+if not exists(select * from Genres)
+begin
+	insert into Genres
+	values ('Компьютеры'), ('Художественная литература')
+end 
+
+if not exists (select * from Books)
+begin
+   declare @computer_genre int = (select GenreID from Genres where Name='Компьютеры')
+   declare @classic int = (select GenreID from Genres where Name='Художественная литература')
+
+  insert Books   
+   values (@computer_genre,'Алгоритмы на Java','Самая важная информация об алгоритмах и структурах данных',2013,'978-5-8459-1781-2','Addison-Wesley','9 785845 917812')
+         ,(@computer_genre, 'Ремесло программиста','Перед вами книга по выживанию в условиях промышленного производства ПО',2009,'978-5-93286-127-1','Символ','9 785932 861271')
+         ,(@computer_genre, 'Мифический человеко-месяц','Библия разработчиков написаная еще в 1975 году',2010,'5-93286-005-7','Символ','9 785932 860052')
+         ,(@computer_genre, 'MS SQL 2012 - Оконные функции','Подробное руководство по применению оконных функций',2013,'978-5-7502-0416-8','Символ','9 785750 204168')
+		 ,(@classic,'Путешествие в Икстлан','Дон Хуан открывает Кастанеде путь Воина',2006,'5-91250-072-1','София','9 785912 500725')
+ 
+ insert into Authors 
+		  values ('Роберт Сэджвик','1946-12-20', null, 'американский учёный в области информатики, профессор Принстонского университета'
+		  ,'https://ru.wikipedia.org/wiki/%D0%A1%D0%B5%D0%B4%D0%B6%D0%B2%D0%B8%D0%BA,_%D0%A0%D0%BE%D0%B1%D0%B5%D1%80%D1%82')
+
+         , ('Фредерик Брукс','1931-04-19', null, 'американский учёный в области теории вычислительных систем'
+		  ,'https://ru.wikipedia.org/wiki/%D0%91%D1%80%D1%83%D0%BA%D1%81,_%D0%A4%D1%80%D0%B5%D0%B4%D0%B5%D1%80%D0%B8%D0%BA')
+		 , ('Карлос Кастанеда','1925-12-25','1998-04-27','американский писатель, доктор философии по антропологии, этнограф, мыслитель эзотерической ориентации и мистик, автор 12 томов книг-бестселлеров, разошедшихся тиражом в 28 миллионов экземпляров на 17 языках'
+		     ,'https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D1%81%D1%82%D0%B0%D0%BD%D0%B5%D0%B4%D0%B0,_%D0%9A%D0%B0%D1%80%D0%BB%D0%BE%D1%81')
+
+insert into BooksAuthors
+         values ((select BookID from Books where ISBN='978-5-8459-1781-2'),(select AuthorID from Authors where FIO='Роберт Сэджвик'))
+		       , ((select BookID from Books where ISBN='5-93286-005-7'),(select AuthorID from Authors where FIO='Фредерик Брукс'))
+		       , ((select BookID from Books where ISBN='5-91250-072-1'),(select AuthorID from Authors where FIO='Карлос Кастанеда'))
+
+end 
