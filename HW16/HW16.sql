@@ -85,9 +85,11 @@ create table [BooksSaldo]
   [BookSaldoID] bigint identity (1,1) not null,
   [DateSaldo] datetime2 not null,
   [BookID]    bigint not null,
+  [SaldoBegin] int not null,
   [QtyIn]     int not null,
   [QtyOut]    int not null,
-  [Saldo]     int not null
+  [SaldoEnd] int not null,
+  
   CONSTRAINT [PK_BookSaldo] PRIMARY KEY CLUSTERED ([BookSaldoID] ASC),
   CONSTRAINT [FK_BookSaldo_BookID] FOREIGN KEY ([BookID])  REFERENCES [Books]([BookID])
 
@@ -156,8 +158,8 @@ CREATE TABLE [Docs]
  [DocID]        bigint IDENTITY (1, 1) NOT NULL ,
  [CreateUserID] bigint NOT NULL ,
  [CreateDate]   datetime2 NOT NULL ,
- [UpdateUserID] bigint NOT NULL ,
- [UpdateDate]   datetime2 NOT NULL ,
+ [UpdateUserID] bigint  NULL ,
+ [UpdateDate]   datetime2  NULL ,
  
  CONSTRAINT [PK_Docs] PRIMARY KEY CLUSTERED ([DocID] ASC),
  CONSTRAINT [FK_Docs_UsersCreate] FOREIGN KEY ([CreateUserID])  REFERENCES [Users]([UserID]),
