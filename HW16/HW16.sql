@@ -255,6 +255,15 @@ begin
 	values ('Компьютеры'), ('Художественная литература'),('Sci-fiction')
 end 
 
+/*Добавим книги, авторов и связи авторов и книг
+  при этом могут быть ситуации 
+  Авторы             Книги
+    1                 1
+	1                 много
+	много             1
+	много             много
+
+  */
 if not exists (select * from Books)
 begin
    declare @computer_genre int = (select GenreID from Genres where Name='Компьютеры')
@@ -318,4 +327,30 @@ begin
 			   , ((select BookID from Books where ISBN='978-5-00117-545-2'),(select AuthorID from Authors where FIO='Петцольд Чарльз'))
 			   , ((select BookID from Books where ISBN='978-5-389-11221-6'),(select AuthorID from Authors where FIO='Митчелл Дэвид'))
 
+end 
+
+-- Добавим записи библиотекарей
+if not exists (select * from Users)
+begin
+    insert into Users values
+	     ('vetoshkina52'), ('pushkina82')
+end 
+
+--Добавим 5 читалей
+if not exists (select * from Readers) 
+begin
+   insert into Readers values 
+            ('Сидоров Иван Петрович','2000-11-22','Коломна, ул. Дзержинского 5 кв. 12'   ,'+79151445517','0000001')
+          , ('Епифанцев Владимир Егорович','1950-07-03','Коломна, ул. Кирова 31 кв. 01'  ,'+79032735267','0000002')
+          , ('Навальный Алексей Михайлович','1976-06-15','Коломна, пр. Окский 7 кв. 01'  ,'+79264317721','0000003')
+          , ('Трегубов Юрий Владимирович','1976-03-24' ,'Коломна, ул. Калинина 121 кв.41','+79069014769','0000004')
+		  , ('Кипелов Антон Тихонович','1962-10-29' ,'Коломна, ул. Фрунзе 54, кв. 11'    ,'+79172023019','0000005')
+         
+end 
+
+-- Добавим количество шкафов по жанрам
+if not exists (select * from Cupboards)
+begin
+	insert into Cupboards ([Locate])
+	     select [Name] from Genres
 end 
